@@ -1,0 +1,96 @@
+version: "3.8"
+
+x-analyzer-base:
+  &analyzer-base
+  image: eth-state-analyzer:local
+  build:
+    context: ./analyzer
+    dockerfile: Dockerfile
+
+services:
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    network_mode: host
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes: 
+      - ./postgresql/init-database.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      - ./postgresql/triggers.sql:/triggers.sql
+      - ./data/postgresql:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U user -d ethseer
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  ethseer-client:
+    image: migalabs/ethseer-client:v0.1.0
+    container_name: ethseer-client-container
+    entrypoint: /app/run.sh
+    network_mode: host
+    init: true
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ${PWD}/.env:/app/.env
+      - ${PWD}/ethseer/run.sh:/app/run.sh
+    
+  ethseer-server:
+    image: migalabs/ethseer-server:v0.1.0
+    container_name: ethseer-server-container
+    init: true
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ${PWD}/.env:/app/.env
+  
+  analyzer-rewards:
+    <<: *analyzer-base
+    container_name: eth-state-analyzer-rewards
+    network_mode: host
+    init: true
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >-
+      rewards
+      --log-level=${STATE_ANALYZER_LOG_LEVEL:-info}
+      --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
+      --init-slot=${STATE_ANALYZER_INIT_SLOT:-0}
+      --final-slot=${STATE_ANALYZER_FINAL_SLOT:-1000}
+      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5432/ethseer}
+      --workers-num=${STATE_ANALYZER_WORKERS_NUM:-10}
+      --db-workers-num=${STATE_ANALYZER_DB_WORKERS_NUM:-4}
+      --download-mode=${STATE_ANALYZER_DOWNLOAD_MODE:-finalized}
+                        
+  analyzer-blocks:
+    <<: *analyzer-base
+    container_name: eth-state-analyzer-blocks
+    network_mode: host
+    init: true
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >-
+      blocks
+      --log-level=${BLOCK_ANALYZER_LOG_LEVEL:-info}
+      --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
+      --init-slot=${BLOCK_ANALYZER_INIT_SLOT:-0}
+      --final-slot=${BLOCK_ANALYZER_FINAL_SLOT:-1000}
+      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5432/ethseer}
+      --workers-num=${BLOCK_ANALYZER_WORKERS_NUM:-1}
+      --db-workers-num=${BLOCK_ANALYZER_DB_WORKERS_NUM:-1}
+      --download-mode=${BLOCK_ANALYZER_DOWNLOAD_MODE:-hybrid}
+
+networks:
+  cluster:
