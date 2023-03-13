@@ -6,6 +6,8 @@ Ethereum network's monitor-er
 - Synced beacon node in the desired network
 - Docker Engine and Docker Compose installed
 
+Please also copy the .env.sample into .env, and fill the necessary for your case.
+
 # Services
 
 ## Database
