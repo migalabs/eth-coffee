@@ -1,6 +1,11 @@
 # eth-coffee
 Ethereum network's monitor-er
 
+# Requirements
+
+- Synced beacon node in the desired network
+- Docker Engine and Docker Compose installed
+
 # Services
 
 ## Database
