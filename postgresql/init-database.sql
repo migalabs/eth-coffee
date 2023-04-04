@@ -8,10 +8,7 @@ CREATE TABLE IF NOT EXISTS t_eth2_pubkeys (
 CREATE TABLE IF NOT EXISTS t_status(
 	f_id INT,
 	f_status TEXT PRIMARY KEY);
-INSERT INTO t_status (
-		f_id, 
-		f_status)
-		VALUES (0, "in queue to activation"),
-		VALUES (1, "active"),
-		VALUES (2, "exit"),
-		VALUES (3, "slashed");
+INSERT INTO t_status (f_id, f_status) VALUES (0, 'in queue to activation');
+INSERT INTO t_status (f_id, f_status) VALUES (1, 'active');
+INSERT INTO t_status (f_id, f_status) VALUES (2, 'exit');
+INSERT INTO t_status (f_id, f_status) VALUES (3, 'slashed');
