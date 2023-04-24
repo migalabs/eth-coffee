@@ -1,0 +1,1 @@
+docker exec eth-coffee_db_1 psql -U user -d ethseer -f /trigger_val_window.sql

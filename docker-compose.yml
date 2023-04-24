@@ -14,13 +14,14 @@ services:
     restart: always
     networks: [ cluster ]
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
     volumes: 
       - ./postgresql/init-database.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
       - ./postgresql/triggers.sql:/triggers.sql
+      - ./postgresql/trigger_val_window.sql:/trigger_val_window.sql
       - ./data/postgresql:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U user -d ethseer
