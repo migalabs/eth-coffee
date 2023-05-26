@@ -42,10 +42,11 @@ services:
     ports:
       - "${ETHSEER_CLIENT_PORT:-3000}:3000"
     init: true
+    entrypoint: /opt/run.sh
     restart: unless-stopped
     volumes:
       - ${PWD}/.env:/app/.env
-      - ${PWD}/ethseer/run.sh:/app/run.sh
+      - ${PWD}/ethseer/run.sh:/opt/run.sh
     
   ethseer-server:
     image: migalabs/ethseer-server:v0.2.0
@@ -60,10 +61,21 @@ services:
       - DB_PORT=${DB_PORT}
       - DB_PASSWORD=${DB_PASSWORD}
     networks: [ cluster ]
+    entrypoint: /opt/run.sh
     ports:
       - "${API_LISTEN_PORT:-3020}:${API_LISTEN_PORT}"
     volumes:
       - ${PWD}/.env:/app/.env
+      - ${PWD}/ethseer/run.sh:/opt/run.sh
+  
+  nginx:
+    restart: always
+    image: "nginx:latest"
+    ports:
+      - "5086:5085"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks: [ cluster ]
   
   analyzer-rewards:
     <<: *analyzer-base
