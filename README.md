@@ -40,7 +40,8 @@ Ethseer Server opens an API that queries the database, and serves data to the fr
 1. First of all inititate the database. This will create the database and some tables.
 2. After this, please start running the analyzer service, either one of them or both, as needed. The tool will create the necessary tables to insert all  the data.
 3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can server real time data.
-4. Run Etheseer client and server.
+4. Run Etheseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.
+5. After both client and server are running, you may run the nginx service. 
 
 Please keep in mind that the only variable you need to fill beforehand is the beacon node, the rest of variables can be the default ones. If you wish, you can modify these as well to adjust to your personal case.
 
