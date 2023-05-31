@@ -58,11 +58,25 @@ For a more custom execution you can edit the database details, in case you have 
 
 # Execution
 
-1. First of all inititate the database. This will create the database and some tables.
-2. After this, please start running the analyzer service, either one of them or both, as needed. The tool will create the necessary tables to insert all  the data.
-3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can server real time data.
-4. Run Etheseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.
-5. After both client and server are running, you may run the nginx service. 
+1. First of all inititate the database. This will create the database and some tables.<br>
+`docker-compose up -d db`
+2. After this, please start running the analyzer service, either one of them or both, as needed. The tool will create the necessary tables to insert all  the data.<br>
+`docker-compose up analyzer-blocks`<br>
+(You can kill it Ctrl+C as soon as it connects to the database)<br>
+3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can server real time data.<br>
+`./postgresql/triggers.sh`
+4. Run Etheseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.<br>
+`docker-compose up -d ethseer-server ethseer-client`
+The ethseer images need to do some startup processes, so please wait a couple of minutes.
+You can also track the logs with <br>
+`docker-compose logs -f ethseer-client ethseer-server`<br>
+Both services should be ready when you hit<br>
+Ethseer-server:<br><pre> Database connected</pre>
+Ethseer-client:<br> <pre> ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+ethseer-client-container | info  - Loaded env from /app/.env</pre>
+
+5. After both client and server are running, you may run the nginx service. <br>
+`docker-compose up -d nginx`
 
 Please keep in mind that the only variable you need to fill beforehand is the beacon node, the rest of variables can be the default ones. If you wish, you can modify these as well to adjust to your personal case.
 
