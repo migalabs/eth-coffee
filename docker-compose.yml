@@ -53,8 +53,8 @@ services:
     init: true
     restart: unless-stopped
     environment:
-      - API_LISTEN_PORT=${API_LISTEN_PORT}
-      - API_LISTEN_IP=${API_LISTEN_IP}
+      - API_LISTEN_PORT=3020
+      - API_LISTEN_IP=0.0.0.0
       - DB_USER=${DB_USER}
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
