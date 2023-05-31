@@ -12,13 +12,13 @@ Please also copy the .env.sample into .env, and fill the necessary for your case
 
 ## Database
 Here we will allocate all information from the State Analyzer tool.
-The tool will create the following tables:
-t_epoch_metrics_summary (data about each epoch)
-t_validator_rewards_summary (data about each epoch and validator, only when metric is active)
-t_block_metrics (data about each block)
-t_eth2_pubkeys (here you can define you pubkeys and pools)
-t_proposer_duties
-t_status (link of status id to string)
+The tool will create the following tables:<br>
+- t_epoch_metrics_summary (data about each epoch)<br>
+- t_validator_rewards_summary (data about each epoch and validator, only when metric is active)<br>
+- t_block_metrics (data about each block)<br>
+- t_eth2_pubkeys (here you can define you pubkeys and pools)
+- t_proposer_duties<br>
+- t_status (link of status id to string)<br>
 
 Please keep in mind that validator data is the most disk consuming data.
 14k epochs has taken 1.5TB of disk in the past.
