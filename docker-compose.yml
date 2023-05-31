@@ -30,7 +30,7 @@ services:
       retries: 3
 
   ethseer-client:
-    image: migalabs/ethseer-client:v0.2.0
+    image: migalabs/ethseer-client:${ETHSEER_CLIENT_VERSION:-v0.3.0}
     container_name: ethseer-client-container
     networks: [ cluster ]
     environment:
@@ -48,7 +48,7 @@ services:
       - ${PWD}/ethseer/run.sh:/opt/run.sh
     
   ethseer-server:
-    image: migalabs/ethseer-server:v0.2.0
+    image: migalabs/ethseer-server:${ETHSEER_SERVER_VERSION:-v0.3.0}
     init: true
     restart: unless-stopped
     environment:
