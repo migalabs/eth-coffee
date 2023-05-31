@@ -62,8 +62,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     networks: [ cluster ]
     entrypoint: /opt/run.sh
-    ports:
-      - "${API_LISTEN_PORT:-3020}:${API_LISTEN_PORT}"
     volumes:
       - ${PWD}/.env:/app/.env
       - ${PWD}/ethseer/run.sh:/opt/run.sh
