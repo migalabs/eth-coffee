@@ -35,6 +35,27 @@ There are two services involved in this process.
 Ethseer Client will serve the frontend static files.
 Ethseer Server opens an API that queries the database, and serves data to the frontend.
 
+# Env file
+
+The first step to prepare for the execution is to copy the `.env.sample` into a `.env` file.
+For a minimal execution you need to edit the following variables:
+
+Please write the IP and port where you archival beacon node is placed
+<pre>
+ANALYZER_BN_ENDPOINT="http://localhost:5052"
+</pre>
+Please write the IP and port where you execution node is placed (should be the same IP as the beacon node after The Merge)
+<pre>
+ANALYZER_EL_ENDPOINT="http://localhost:8545"
+</pre>
+
+Please write the public IP of the machine where the website will be accesible. This is the public IP where you are deploying this repository.
+<pre>
+NEXT_PUBLIC_URL_API="http://__publicIP__:5086/v1"
+</pre>
+
+For a more custom execution you can edit the database details, in case you have your own database server or want different credentials.
+
 # Execution
 
 1. First of all inititate the database. This will create the database and some tables.
