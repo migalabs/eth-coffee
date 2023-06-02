@@ -54,20 +54,31 @@ Please write the public IP of the machine where the website will be accesible. T
 NEXT_PUBLIC_URL_API="http://__publicIP__:5086/v1"
 </pre>
 
+Finally, we need to edit the version of the website we want to run. Please check available tags [here](https://hub.docker.com/repositories/migalabs) 
+<pre>
+ETHSEER_CLIENT_VERSION=__version__
+ETHSEER_SERVER_VERSION=__version__
+</pre>
+
 For a more custom execution you can edit the database details, in case you have your own database server or want different credentials.
 
 # Execution
 
-1. First of all inititate the database. This will create the database and some tables.<br>
+1. First of all inititate the database service. This will create the database and some tables.<br>
 `docker-compose up -d db`
+
 2. After this, please start running the analyzer service, either one of them or both, as needed. The tool will create the necessary tables to insert all  the data.<br>
-`docker-compose up analyzer-blocks`<br>
-(You can kill it Ctrl+C as soon as it connects to the database)<br>
-3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can server real time data.<br>
+`docker-compose up -d analyzer-rewards analyzer-blocks`<br>
+Note: Running in finalized will wait for 4 epochs before writing any epoch data to the database. You might see data about the blocks at first only.<br>
+You may check the progress of the analyzer with:<br>
+`docker-compose logs --tail 100 -f analyzer-rewards analyzer-blocks`<br>
+As soon as you see `epoch task received...` epoch metrics should start reaching the database and the website.
+
+3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can serve real time data.<br>
 `./postgresql/triggers.sh`
-4. Run Etheseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.<br>
-`docker-compose up -d ethseer-server ethseer-client`
-The ethseer images need to do some startup processes, so please wait a couple of minutes.
+
+4. Run Ethseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.<br>
+`docker-compose up -d ethseer-server ethseer-client`<br>
 You can also track the logs with <br>
 `docker-compose logs -f ethseer-client ethseer-server`<br>
 Both services should be ready when you hit<br>
@@ -76,7 +87,7 @@ Ethseer-client:<br> <pre> ready - started server on 0.0.0.0:3000, url: http://lo
 ethseer-client-container | info  - Loaded env from /app/.env</pre>
 
 5. After both client and server are running, you may run the nginx service. <br>
-`docker-compose up -d nginx`
-
-Please keep in mind that the only variable you need to fill beforehand is the beacon node, the rest of variables can be the default ones. If you wish, you can modify these as well to adjust to your personal case.
+`docker-compose up -d nginx`<br>
+Navidate to: `http://yourPublicIP:5086`<br>
+You might see no data here yet.
 
