@@ -2,7 +2,6 @@ version: "3.8"
 
 x-analyzer-base:
   &analyzer-base
-  image: eth-state-analyzer:local
   build:
     context: ./analyzer
     dockerfile: Dockerfile
@@ -31,7 +30,6 @@ services:
 
   ethseer-client:
     image: migalabs/ethseer-client:${ETHSEER_CLIENT_VERSION:-v0.3.0}
-    container_name: ethseer-client-container
     networks: [ cluster ]
     environment:
       - NEXT_PUBLIC_URL_API=${NEXT_PUBLIC_URL_API}
