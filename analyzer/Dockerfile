@@ -11,8 +11,7 @@ WORKDIR /app
 RUN git clone https://github.com/cortze/eth-cl-state-analyzer.git
 WORKDIR /app/eth-cl-state-analyzer
 
-RUN go mod tidy
 RUN go get
-RUN make build
+RUN go build -o ./build/eth-cl-state-analyzer
 
 ENTRYPOINT ["./build/eth-cl-state-analyzer"]
