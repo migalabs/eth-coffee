@@ -65,7 +65,7 @@ services:
     restart: always
     image: "nginx:latest"
     ports:
-      - "5086:5085"
+      - "${NGINX_PORT}:5085"
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks: [ cluster ]
