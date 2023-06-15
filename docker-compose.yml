@@ -29,7 +29,7 @@ services:
   ethseer-client:
     build:
       context: ./ethseer/
-      dockerfile: Dockerfile-client
+      dockerfile: Dockerfile.client
       args:
         - NGINX_PORT=${NGINX_PORT:-80}
         - PUBLIC_IP=${PUBLIC_IP}
@@ -47,7 +47,7 @@ services:
   ethseer-server:
     build:
       context: ./ethseer/
-      dockerfile: Dockerfile-server
+      dockerfile: Dockerfile.server
       args:
         - ETHSEER_SERVER_VERSION=${ETHSEER_SERVER_VERSION:-v0.3.0-test}
         - CALLS_VERBOSE=${CALLS_VERBOSE:-True}
