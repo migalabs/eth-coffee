@@ -27,40 +27,38 @@ services:
       retries: 3
 
   ethseer-client:
-    image: migalabs/ethseer-client:${ETHSEER_CLIENT_VERSION:-v0.3.0}
+    build:
+      context: ./ethseer/
+      dockerfile: Dockerfile-client
+      args:
+        - NGINX_PORT=${NGINX_PORT:-80}
+        - ETHSEER_CLIENT_VERSION=${ETHSEER_CLIENT_VERSION:-v0.3.0-test}
+        - NEXT_PUBLIC_URL_API=${NEXT_PUBLIC_URL_API}
+        - NEXT_PUBLIC_GOOGLE_ANALYTICS=${NEXT_PUBLIC_GOOGLE_ANALYTICS:-}
+        - NEXT_PUBLIC_TAG_MANAGER=${NEXT_PUBLIC_TAG_MANAGER:-}
+        - NEXT_PUBLIC_NETWORK_GENESIS=${NEXT_PUBLIC_NETWORK_GENESIS:-1606824023000}
     networks: [ cluster ]
-    environment:
-      - NEXT_PUBLIC_URL_API=${NEXT_PUBLIC_URL_API}
-      - NEXT_PUBLIC_GOOGLE_ANALYTICS=${NEXT_PUBLIC_GOOGLE_ANALYTICS}
-      - NEXT_PUBLIC_TAG_MANAGER=${NEXT_PUBLIC_TAG_MANAGER}
-      - NEXT_PUBLIC_NETWORK_GENESIS=${NEXT_PUBLIC_NETWORK_GENESIS}
     ports:
-      - "${ETHSEER_CLIENT_PORT:-3000}:3000"
+      - 3000:3000
     init: true
-    entrypoint: /opt/run.sh
     restart: unless-stopped
-    volumes:
-      - ${PWD}/.env:/app/.env
-      - ${PWD}/ethseer/run.sh:/opt/run.sh
     
   ethseer-server:
-    image: migalabs/ethseer-server:${ETHSEER_SERVER_VERSION:-v0.3.0}
+    build:
+      context: ./ethseer/
+      dockerfile: Dockerfile-server
+      args:
+        - ETHSEER_SERVER_VERSION=${ETHSEER_SERVER_VERSION:-v0.3.0-test}
+        - CALLS_VERBOSE=${CALLS_VERBOSE:-True}
+        - DB_USER=${DB_USER:-user}
+        - DB_HOST=${DB_HOST:-db}
+        - DB_NAME=${DB_NAME:-ethseer}
+        - DB_PORT=${DB_PORT:-5432}
+        - DB_PASSWORD=${DB_PASSWORD:-password}
     init: true
     restart: unless-stopped
-    environment:
-      - API_LISTEN_PORT=3020
-      - API_LISTEN_IP=0.0.0.0
-      - DB_USER=${DB_USER}
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_PORT}
-      - DB_PASSWORD=${DB_PASSWORD}
     networks: [ cluster ]
-    entrypoint: /opt/run.sh
-    volumes:
-      - ${PWD}/.env:/app/.env
-      - ${PWD}/ethseer/run.sh:/opt/run.sh
-  
+    
   nginx:
     restart: always
     image: "nginx:latest"
