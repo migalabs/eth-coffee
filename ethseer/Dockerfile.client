@@ -2,11 +2,10 @@
 
 ARG ETHSEER_CLIENT_VERSION
 
-# Install dependencies only when needed
-FROM migalabs/ethseer-client:$ETHSEER_CLIENT_VERSION AS deps
-RUN yarn install --frozen-lockfile
 # Rebuild the source code only when needed
-FROM node:16-alpine AS builder
+FROM migalabs/ethseer-client:$ETHSEER_CLIENT_VERSION AS builder
+
+WORKDIR /app
 
 ARG NGINX_PORT
 ARG PUBLIC_IP
@@ -25,8 +24,7 @@ ENV NEXT_PUBLIC_NETWORK_GENESIS $NEXT_PUBLIC_NETWORK_GENESIS
 
 RUN env > .env
 
-WORKDIR /app
-COPY --from=deps /app/ ./
+RUN yarn install --frozen-lockfile
 RUN yarn build
 
 # Production image, copy all the files and run next
