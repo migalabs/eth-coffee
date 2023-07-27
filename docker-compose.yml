@@ -43,6 +43,7 @@ services:
       - DB_NAME=${DB_NAME:-ethseer}
       - DB_PORT=${DB_PORT:-5432}
       - DB_PASSWORD=${DB_PASSWORD:-password}
+      - GENESIS=${GENESIS:-1606824023000}
     init: true
     restart: unless-stopped
     networks: [ cluster ]
