@@ -11,7 +11,7 @@ services:
     restart: always
     networks: [ cluster ]
     ports:
-      - "5434:5432"
+      - ${DB_LISTEN_PORT:-5434}:5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
@@ -52,14 +52,14 @@ services:
     restart: always
     image: "nginx:latest"
     ports:
-      - "${NGINX_PORT}:5085"
+      - ${NGINX_PORT:-80}:5085
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks: [ cluster ]
   
   analyzer-rewards:
     <<: *analyzer-base
-    networks: [ cluster ]
+    network_mode: 'host'
     init: true
     restart: unless-stopped
     depends_on:
@@ -71,14 +71,14 @@ services:
       --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
       --init-slot=${STATE_ANALYZER_INIT_SLOT:-0}
       --final-slot=${STATE_ANALYZER_FINAL_SLOT:-1000}
-      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@db:5432/ethseer}
+      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer}
       --workers-num=${STATE_ANALYZER_WORKERS_NUM:-10}
       --db-workers-num=${STATE_ANALYZER_DB_WORKERS_NUM:-4}
       --download-mode=${STATE_ANALYZER_DOWNLOAD_MODE:-finalized}
                         
   analyzer-blocks:
     <<: *analyzer-base
-    networks: [ cluster ]
+    network_mode: 'host'
     init: true
     restart: unless-stopped
     depends_on:
@@ -90,7 +90,7 @@ services:
       --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
       --init-slot=${BLOCK_ANALYZER_INIT_SLOT:-0}
       --final-slot=${BLOCK_ANALYZER_FINAL_SLOT:-1000}
-      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@db:5432/ethseer}
+      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer}
       --workers-num=${BLOCK_ANALYZER_WORKERS_NUM:-1}
       --db-workers-num=${BLOCK_ANALYZER_DB_WORKERS_NUM:-1}
       --download-mode=${BLOCK_ANALYZER_DOWNLOAD_MODE:-hybrid}
