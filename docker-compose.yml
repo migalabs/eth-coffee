@@ -11,7 +11,7 @@ services:
     restart: always
     networks: [ cluster ]
     ports:
-      - ${DB_LISTEN_PORT:-5434}:5432
+      - ${DB_PUBLIC_PORT:-5434}:5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
