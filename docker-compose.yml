@@ -2,7 +2,7 @@ version: "3.8"
 
 x-analyzer-base:
   &analyzer-base
-  image: migalabs/goteth:v0.0.1
+  image: migalabs/goteth:v2.0.0
 
 services:
 
@@ -56,27 +56,8 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks: [ cluster ]
-  
-  analyzer-rewards:
-    <<: *analyzer-base
-    network_mode: 'host'
-    init: true
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    command: >-
-      rewards
-      --log-level=${STATE_ANALYZER_LOG_LEVEL:-info}
-      --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
-      --init-slot=${STATE_ANALYZER_INIT_SLOT:-0}
-      --final-slot=${STATE_ANALYZER_FINAL_SLOT:-1000}
-      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer}
-      --workers-num=${STATE_ANALYZER_WORKERS_NUM:-10}
-      --db-workers-num=${STATE_ANALYZER_DB_WORKERS_NUM:-4}
-      --download-mode=${STATE_ANALYZER_DOWNLOAD_MODE:-finalized}
                         
-  analyzer-blocks:
+  analyzer:
     <<: *analyzer-base
     network_mode: 'host'
     init: true
@@ -86,14 +67,17 @@ services:
         condition: service_healthy
     command: >-
       blocks
-      --log-level=${BLOCK_ANALYZER_LOG_LEVEL:-info}
+      --log-level=${ANALYZER_LOG_LEVEL:-info}
       --bn-endpoint=${ANALYZER_BN_ENDPOINT:-localhost:5052}
-      --init-slot=${BLOCK_ANALYZER_INIT_SLOT:-0}
-      --final-slot=${BLOCK_ANALYZER_FINAL_SLOT:-1000}
+      --el-endpoint=${ANALYZER_EL_ENDPOINT:-localhost:8545}
+      --init-slot=${ANALYZER_INIT_SLOT:-0}
+      --final-slot=${ANALYZER_FINAL_SLOT:-1000}
       --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer}
-      --workers-num=${BLOCK_ANALYZER_WORKERS_NUM:-1}
-      --db-workers-num=${BLOCK_ANALYZER_DB_WORKERS_NUM:-1}
-      --download-mode=${BLOCK_ANALYZER_DOWNLOAD_MODE:-hybrid}
+      --workers-num=${ANALYZER_WORKERS_NUM:-1}
+      --db-workers-num=${ANALYZER_DB_WORKERS_NUM:-1}
+      --download-mode=${ANALYZER_DOWNLOAD_MODE:-finalized}
+      --metrics=${ANALYZER_METRICS:-epoch,block}
+      --prometheus-port=${BLOCK_PROMETHEUS_PORT:-9081}
 
 networks:
   cluster:
