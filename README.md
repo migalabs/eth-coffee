@@ -74,10 +74,7 @@ You may check the progress of the analyzer with:<br>
 `docker-compose logs --tail 100 -f analyzer-rewards analyzer-blocks`<br>
 As soon as you see `epoch task received...` epoch metrics should start reaching the database and the website.
 
-3. After this, you may run the "triggers.sh" script, under the postgresql folder. This script will create the triggers so the website can serve real time data.<br>
-`./postgresql/triggers.sh`
-
-4. Run Ethseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.<br>
+3. Run Ethseer client and server. The image needs to rebuild to apply env variables, so this might take some minutes.<br>
 `docker-compose up -d ethseer-server ethseer-client`<br>
 You can also track the logs with <br>
 `docker-compose logs -f ethseer-client ethseer-server`<br>
@@ -86,7 +83,7 @@ Ethseer-server:<br><pre> Database connected</pre>
 Ethseer-client:<br> <pre> ready - started server on 0.0.0.0:3000, url: http://localhost:3000
 ethseer-client-container | info  - Loaded env from /app/.env</pre>
 
-5. After both client and server are running, you may run the nginx service. <br>
+4. After both client and server are running, you may run the nginx service. <br>
 `docker-compose up -d nginx`<br>
 Navidate to: `http://yourPublicIP:5086`<br>
 You might see no data here yet.
