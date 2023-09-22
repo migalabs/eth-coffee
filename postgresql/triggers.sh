@@ -1,1 +1,0 @@
-docker exec eth-coffee_db_1 psql -U user -d ethseer -f /triggers.sql
