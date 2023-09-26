@@ -17,7 +17,6 @@ services:
       - POSTGRES_PASSWORD=password
     volumes: 
       - ./postgresql/init-database.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
-      - ./postgresql/triggers.sql:/triggers.sql
       - ./postgresql/trigger_val_window.sql:/trigger_val_window.sql
       - ./data/postgresql:/var/lib/postgresql/data
     healthcheck:
@@ -27,13 +26,13 @@ services:
       retries: 3
 
   ethseer-client:
-    image: migalabs/ethseer-client:${ETHSEER_CLIENT_TAG:-v1.0.0}
+    image: migalabs/ethseer-client:${ETHSEER_CLIENT_TAG:-v1.3.0}
     networks: [ cluster ]
     init: true
     restart: unless-stopped
     
   ethseer-server:
-    image: migalabs/ethseer-server:${ETHSEER_SERVER_TAG:-v1.0.0}
+    image: migalabs/ethseer-server:${ETHSEER_SERVER_TAG:-v1.3.0}
     environment:
       - CALLS_VERBOSE=${CALLS_VERBOSE:-True}
       - API_LISTEN_PORT=3020
@@ -43,7 +42,6 @@ services:
       - DB_NAME=${DB_NAME:-ethseer}
       - DB_PORT=${DB_PORT:-5432}
       - DB_PASSWORD=${DB_PASSWORD:-password}
-      - GENESIS=${GENESIS:-1606824023000}
     init: true
     restart: unless-stopped
     networks: [ cluster ]
