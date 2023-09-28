@@ -50,7 +50,7 @@ services:
     restart: always
     image: "nginx:latest"
     ports:
-      - ${NGINX_PORT:-80}:5085
+      - ${NGINX_PORT:-3010}:5085
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks: [ cluster ]
@@ -73,7 +73,7 @@ services:
       --el-endpoint=${ANALYZER_EL_ENDPOINT:-localhost:8545}
       --init-slot=${ANALYZER_INIT_SLOT:-0}
       --final-slot=${ANALYZER_FINAL_SLOT:-1000}
-      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer}
+      --db-url=${ANALYZER_DB_URL:-postgresql://user:password@localhost:5434/ethseer?sslmode=disable}
       --workers-num=${ANALYZER_WORKERS_NUM:-1}
       --db-workers-num=${ANALYZER_DB_WORKERS_NUM:-1}
       --download-mode=${ANALYZER_DOWNLOAD_MODE:-finalized}
