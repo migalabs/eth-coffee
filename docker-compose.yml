@@ -78,7 +78,7 @@ services:
       --db-workers-num=${ANALYZER_DB_WORKERS_NUM:-1}
       --download-mode=${ANALYZER_DOWNLOAD_MODE:-finalized}
       --metrics=${ANALYZER_METRICS:-epoch,block}
-      --prometheus-port=${BLOCK_PROMETHEUS_PORT:-9081}
+      --prometheus-port=${ANALYZER_PROMETHEUS_PORT:-9081}
 
 networks:
   cluster:
