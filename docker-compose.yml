@@ -54,6 +54,9 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks: [ cluster ]
+    depends_on:
+      - ethseer-client
+      - ethseer-server
                         
   analyzer:
     <<: *analyzer-base
