@@ -11,7 +11,7 @@ services:
     restart: always
     networks: [ cluster ]
     ports:
-      - ${DB_PUBLIC_PORT:-5434}:5432
+      - 127.0.0.1:${DB_PUBLIC_PORT:-5434}:5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
@@ -26,25 +26,28 @@ services:
       retries: 3
 
   ethseer-client:
-    image: migalabs/ethseer-client:${ETHSEER_CLIENT_TAG:-v1.3.0}
+    image: migalabs/ethseer-client:${ETHSEER_CLIENT_TAG:-v2.0.0}
     networks: [ cluster ]
     init: true
     restart: unless-stopped
+    environment:
+      - API_URL=http://ethseer-server:3020
     
   ethseer-server:
-    image: migalabs/ethseer-server:${ETHSEER_SERVER_TAG:-v1.3.0}
+    image: migalabs/ethseer-server:${ETHSEER_SERVER_TAG:-v2.0.0}
     environment:
       - CALLS_VERBOSE=${CALLS_VERBOSE:-True}
       - API_LISTEN_PORT=3020
       - API_LISTEN_IP=0.0.0.0
-      - DB_USER=${DB_USER:-user}
-      - DB_HOST=${DB_HOST:-db}
-      - DB_NAME=${DB_NAME:-ethseer}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - NETWORKS=${NETWORKS}
     init: true
+    ports:
+      - 127.0.0.1:3020:3020
     restart: unless-stopped
     networks: [ cluster ]
+    depends_on:
+      db:
+        condition: service_healthy
     
   nginx:
     restart: always
@@ -59,7 +62,7 @@ services:
       - ethseer-server
                         
   goteth:
-    <<: *analyzer-base
+    <<: *goteth-base
     network_mode: 'host'
     init: true
     restart: unless-stopped
