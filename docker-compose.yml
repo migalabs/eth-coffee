@@ -2,7 +2,7 @@ version: "3.8"
 
 x-goteth-base:
   &goteth-base
-  image: migalabs/goteth:v2.0.0
+  image: migalabs/goteth:v2.0.1
 
 services:
 
