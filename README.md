@@ -39,12 +39,12 @@ Please refer [here](https://github.com/migalabs/eth-seer) for more information
 # Execution
 
 Please copy the `.env.sample` file into `.env`.<br>
-If maye edit the `NETWORKS` variable with the appropiate network name.<br>
+You may edit the `NETWORKS` variable with the appropiate network name.<br>
 Then:<br>
 `docker-compose up -d`<br>
 All systems should boot and start working as normal<br>
 Navigate to: `http://yourPublicIP:3010`<br>
-You might see no data here yet until goteth starts filling data (you may have to wait for 3 epochs).
+You might not see anything here yet until goteth starts filling data (you may have to wait for 3 epochs).
 
 ## Desired logs
 
